@@ -1,19 +1,9 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
-import { getCategoryList, type CategoryItem } from '@/apis/layout'
+import { storeToRefs } from 'pinia'
+import { useCategoryStore } from '@/stores/category'
 
-const state = reactive({
-  categoryList: [] as CategoryItem[],
-})
-
-const getCategory = async () => {
-  const res = await getCategoryList()
-  state.categoryList = res.result
-}
-
-onMounted(() => {
-  getCategory()
-})
+const categoryStore = useCategoryStore()
+const { categoryList } = storeToRefs(categoryStore)
 </script>
 <template>
   <header class="app-header">
@@ -25,7 +15,7 @@ onMounted(() => {
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li class="home" v-for="item in state.categoryList" :key="item.id">
+        <li class="home" v-for="item in categoryList" :key="item.id">
           <RouterLink active-class="active" :to="`/category/${item.id}`">{{
             item.name
           }}</RouterLink>
