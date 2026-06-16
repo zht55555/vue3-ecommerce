@@ -1,9 +1,38 @@
+<script setup lang="ts">
+import { reactive, onMounted } from 'vue'
+import { getBanner } from '@/apis/home'
+const state = reactive({
+  bannerList: [] as { id: string; imgUrl: string }[],
+})
+
+onMounted(async () => {
+  const res = await getBanner()
+  state.bannerList = res.result
+})
+</script>
+
 <template>
   <div class="home-banner">
-    <div class="container">
-      <h2>新鲜好吃的水果，尽在小兔鲜儿</h2>
-      <p>每天新鲜配送，品质保证，满足您的味蕾需求！</p>
-      <a href="javascript:;" class="btn">立即选购</a>
-    </div>
+    <el-carousel height="500px">
+      <el-carousel-item v-for="item in state.bannerList" :key="item.id">
+        <img :src="item.imgUrl" alt="" />
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
+
+<style scoped lang="less">
+.home-banner {
+  width: 1240px;
+  height: 500px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 98;
+
+  img {
+    width: 100%;
+    height: 500px;
+  }
+}
+</style>
