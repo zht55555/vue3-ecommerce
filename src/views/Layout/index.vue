@@ -7,6 +7,10 @@ import LayoutHeader from './_components/LayoutHeader.vue'
 import LayoutFooter from './_components/LayoutFooter.vue'
 import LayoutFixed from './_components/LayoutFixed.vue'
 
+defineOptions({
+  name: 'LayoutPage',
+})
+
 const categoryStore = useCategoryStore()
 onMounted(() => {
   if (!categoryStore.categoryList.length) {
