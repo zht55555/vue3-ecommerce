@@ -17,7 +17,7 @@ export interface ApiResponse<T = unknown> {
 export type RequestConfig<T = unknown> = AxiosRequestConfig<T>
 
 const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
 })
 
