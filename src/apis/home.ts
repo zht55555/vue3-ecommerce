@@ -6,3 +6,9 @@ export const getBanner = (params?: { distributionSite?: string }) => {
     params: { distributionSite },
   })
 }
+
+export const getNew = () => {
+  return http.get<ApiResponse<{ id: string; name: string; price: number; picture: string }[]>>(
+    '/home/new',
+  )
+}
