@@ -21,6 +21,13 @@ export interface GoodsItem {
   saleInfo: string
 }
 
+export interface HotItem {
+  id: string
+  title: string
+  picture: string
+  alt: string
+}
+
 export interface HomeGoodsGroup {
   id: string
   name: string
@@ -41,6 +48,10 @@ export const getNew = () => {
   return http.get<ApiResponse<NewItem[]>>('/home/new')
 }
 
-export function getGoods() {
+export const getHot = () => {
+  return http.get<ApiResponse<HotItem[]>>('/home/hot')
+}
+
+export const getGoods = () => {
   return http.get<ApiResponse<HomeGoodsGroup[]>>('/home/goods')
 }
