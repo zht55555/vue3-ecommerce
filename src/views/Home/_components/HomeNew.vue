@@ -4,12 +4,11 @@ import { getNew } from '@/apis/home'
 import HomePanel from './HomePanel.vue'
 
 const state = reactive({
-  newList: [] as { id: string; name: string; price: number; picture: string }[],
+  newList: [] as { id: string; name: string; price: string; picture: string }[],
 })
 
 onMounted(async () => {
   const res = await getNew()
-  console.log(res)
   state.newList = res.result
 })
 </script>

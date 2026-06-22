@@ -5,7 +5,7 @@ export interface CategoryItem {
   name: string
   picture: string
   children: { id: string; name: string }[]
-  goods: { id: string; name: string; desc: string; price: number; picture: string }[]
+  goods: { id: string; name: string; desc: string; price: string; picture: string }[]
 }
 
 export const getCategoryList = () => {

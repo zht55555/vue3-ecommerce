@@ -13,10 +13,9 @@ const state = reactive({
 
 onMounted(async () => {
   const res = await getBanner({
-    distributionSite: categoryData?.id,
+    distributionSite: '2',
   })
   state.bannerList = res.result
-  console.log(res)
 })
 
 defineOptions({

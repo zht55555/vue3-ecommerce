@@ -31,10 +31,49 @@ export interface TopCategory extends CategoryBase {
   children: SubCategory[]
 }
 
+export interface SubCategory {
+  counts: number
+  page: number
+  pageSize: number
+  pages: number
+  items: {
+    desc: string
+    id: string
+    name: string
+    orderNum: string
+    picture: string
+    price: string
+  }[]
+}
 // 5. 全局统一响应结构
 
 export const getCategory = (id: string) => {
   return http.get<ApiResponse<TopCategory>>(`/category`, {
     params: { id },
   })
+}
+
+// 获取二级分类
+
+export const getCategoryFilter = (id: string) => {
+  return http.get<
+    ApiResponse<{
+      name: string
+      parentId: string
+      goods: GoodsItem[]
+    }>
+  >(`/category/sub/filter`, {
+    params: { id },
+  })
+}
+
+// 获取商品列表
+
+export const getSubCategory = (data: {
+  categoryId: string
+  page: number
+  pageSize: number
+  sortField: string
+}) => {
+  return http.post<ApiResponse<SubCategory>>('/category/goods/temporary', { method: 'POST', data })
 }

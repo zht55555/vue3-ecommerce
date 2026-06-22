@@ -8,7 +8,7 @@ export interface BannerItem {
 export interface NewItem {
   id: string
   name: string
-  price: number
+  price: string
   picture: string
 }
 
@@ -17,7 +17,7 @@ export interface GoodsItem {
   name: string
   price: string
   picture: string
-  desc: string
+  desc?: string
   saleInfo?: string
 }
 
