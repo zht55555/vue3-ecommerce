@@ -10,7 +10,7 @@ export const useCategory = () => {
   const categoryData = reactive<TopCategory>({
     id: '',
     name: '',
-    picture: null,
+    picture: '',
     children: [],
   })
 

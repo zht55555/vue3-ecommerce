@@ -16,8 +16,12 @@ export interface ApiResponse<T = unknown> {
 
 export type RequestConfig<T = unknown> = AxiosRequestConfig<T>
 
+const baseURL = import.meta.env.DEV
+  ? '/api'
+  : (import.meta.env.VITE_API_BASE_URL ?? 'https://pcapi-xiaotuxian-front-devtest.itheima.net')
+
 const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL,
   timeout: 10000,
 })
 

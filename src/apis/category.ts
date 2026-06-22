@@ -5,7 +5,7 @@ import { type ApiResponse, http } from '@/utils/request'
 export interface CategoryBase {
   id: string
   name: string
-  picture: string | null
+  picture: string
 }
 
 // 2. 商品接口

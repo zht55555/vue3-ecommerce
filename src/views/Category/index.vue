@@ -3,6 +3,7 @@ import { reactive, onMounted } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useCategory } from './_composables/useCategory'
 import { getBanner } from '@/apis/home'
+import GoodsItem from '../Home/_components/GoodsItem.vue'
 
 const { categoryData } = useCategory()
 
@@ -31,14 +32,34 @@ defineOptions({
           <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <div class="home-banner">
+        <el-carousel height="500px">
+          <el-carousel-item v-for="item in state.bannerList" :key="item.id">
+            <img :src="item.imgUrl" alt="" />
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <!-- 分类数据 -->
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryData.children" :key="i.id">
+            <RouterLink :to="`/category/sub/${i.id}`">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :good="good" :key="good.id" />
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="home-banner">
-    <el-carousel height="500px">
-      <el-carousel-item v-for="item in state.bannerList" :key="item.id">
-        <img :src="item.imgUrl" alt="" />
-      </el-carousel-item>
-    </el-carousel>
   </div>
 </template>
 

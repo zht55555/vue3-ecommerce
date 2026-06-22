@@ -15,10 +15,10 @@ export interface NewItem {
 export interface GoodsItem {
   id: string
   name: string
-  price: number
+  price: string
   picture: string
   desc: string
-  saleInfo: string
+  saleInfo?: string
 }
 
 export interface HotItem {
@@ -31,7 +31,7 @@ export interface HotItem {
 export interface HomeGoodsGroup {
   id: string
   name: string
-  price: number
+  price: string
   picture: string
   saleInfo: string
   goods: GoodsItem[]
