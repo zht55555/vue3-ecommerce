@@ -1,8 +1,22 @@
 <script setup lang="ts">
+import { reactive, onMounted } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useCategory } from './_composables/useCategory'
+import { getBanner } from '@/apis/home'
 
 const { categoryData } = useCategory()
+
+const state = reactive({
+  bannerList: [] as { id: string; imgUrl: string }[],
+})
+
+onMounted(async () => {
+  const res = await getBanner({
+    distributionSite: categoryData?.id,
+  })
+  state.bannerList = res.result
+  console.log(res)
+})
 
 defineOptions({
   name: 'CategoryPage',
@@ -18,6 +32,13 @@ defineOptions({
         </el-breadcrumb>
       </div>
     </div>
+  </div>
+  <div class="home-banner">
+    <el-carousel height="500px">
+      <el-carousel-item v-for="item in state.bannerList" :key="item.id">
+        <img :src="item.imgUrl" alt="" />
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
@@ -103,6 +124,7 @@ defineOptions({
   width: 1240px;
   height: 500px;
   z-index: 98;
+  margin: 0 auto;
 
   img {
     width: 100%;
