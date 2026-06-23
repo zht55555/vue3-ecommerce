@@ -3,7 +3,8 @@ import { reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getDetail, type GoodsDetail } from '@/apis/detail'
 import GoodHot from './_components/DetailHot.vue'
-import ImageView from '@/components/ImageView/index.vue'
+// import ImageView from '@/components/ImageView/index.vue'
+// import Sku from '@/components/Sku/index.vue'
 
 const route = useRoute()
 
@@ -28,6 +29,8 @@ const goods = reactive<GoodsDetail>({
     properties: [],
     pictures: [],
   },
+  specs: [],
+  skus: [],
 })
 
 onMounted(async () => {
@@ -39,6 +42,20 @@ onMounted(async () => {
 defineOptions({
   name: 'DetailPage',
 })
+
+type SkuChangePayload =
+  | {
+      skuId: string
+      price: number
+      oldPrice: number
+      inventory: number
+      specsText: string
+    }
+  | Record<string, never>
+
+const change = (payload: SkuChangePayload) => {
+  console.log('选中的sku信息', payload)
+}
 </script>
 <template>
   <div class="xtx-goods-page">
@@ -111,7 +128,7 @@ defineOptions({
                 </dl>
               </div>
               <!-- sku组件 -->
-              <!-- <XtxSku :goods="goods" @change="skuChange"/> -->
+              <SkuComponent :goods="goods" @change="change" />
 
               <!-- 数据组件 -->
               <!-- <el-input-number :min="1" v-model="count" @change="countChange" /> -->

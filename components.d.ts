@@ -21,6 +21,7 @@ declare module 'vue' {
     ImageView: typeof import('./src/components/ImageView/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sku: typeof import('./src/components/Sku/index.vue')['default']
   }
   export interface GlobalDirectives {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

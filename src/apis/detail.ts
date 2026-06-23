@@ -23,6 +23,26 @@ export interface GoodsDetail {
     }[]
     pictures: string[]
   }
+  specs: {
+    id: string
+    name: string
+    values: {
+      name: string
+      picture?: string
+      selected?: boolean
+      disabled?: boolean
+    }[]
+  }[]
+  skus: {
+    id: string
+    inventory: number
+    price: number
+    oldPrice: number
+    specs: {
+      name: string
+      valueName: string
+    }[]
+  }[]
 }
 
 export type GoodsHot = {
