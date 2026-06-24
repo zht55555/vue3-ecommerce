@@ -6,6 +6,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/stores/user'
 
 const TOKEN_KEY = 'token'
 
@@ -29,7 +30,8 @@ const request: AxiosInstance = axios.create({
 
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem(TOKEN_KEY)
+    const userStore = useUserStore()
+    const token = userStore.user?.token || localStorage.getItem(TOKEN_KEY)
 
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`)

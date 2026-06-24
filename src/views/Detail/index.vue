@@ -35,7 +35,6 @@ const goods = reactive<GoodsDetail>({
 
 onMounted(async () => {
   const res = await getDetail(route.params.id as string)
-  console.log('商品详情', res)
   Object.assign(goods, res.result)
 })
 

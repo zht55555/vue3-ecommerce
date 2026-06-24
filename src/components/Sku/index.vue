@@ -74,8 +74,6 @@ const props = withDefaults(
   },
 )
 
-console.log('props.goods', props.goods)
-
 const emit = defineEmits<{
   change: [
     payload:

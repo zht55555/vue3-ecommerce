@@ -10,9 +10,13 @@ export const useUserStore = defineStore(
       const res = await login(params)
       user.value = res.result
     }
+    const clearUserInfo = () => {
+      user.value = null
+    }
     return {
       user,
       getUserInfo,
+      clearUserInfo,
     }
   },
   {

@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const userStore = useUserStore()
-const { user } = userStore
-console.log(user)
+const { clearUserInfo } = userStore
+const { user } = storeToRefs(userStore)
+
+const logout = () => {
+  clearUserInfo()
+  router.push('/login')
+}
 </script>
 <template>
   <nav class="app-topnav">
@@ -11,11 +19,16 @@ console.log(user)
       <ul>
         <template v-if="user?.id">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i></a>
+            <a href="javascript:;"><i class="iconfont icon-user"></i>{{ user?.account }}</a>
           </li>
 
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm
+              title="确认退出吗?"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              @confirm="logout"
+            >
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>

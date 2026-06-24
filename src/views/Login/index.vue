@@ -36,7 +36,6 @@ const rules: FormRules<LoginForm> = {
   agree: [
     {
       validator: (_rule, value, callback) => {
-        console.log(value)
         //自定义校验逻辑
         // 勾选协议通过，不勾选不通过
         if (value) {

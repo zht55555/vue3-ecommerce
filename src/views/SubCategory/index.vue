@@ -34,7 +34,6 @@ onMounted(() => {
 const tabChange = (tab: string) => {
   reqData.sortField = tab
   reqData.page = 1
-  console.log(reqData, 'reqData')
   getSubCategoryData(reqData)
   // load()
 }
@@ -51,7 +50,6 @@ const load = async () => {
 defineOptions({
   name: 'SubCategoryPage',
 })
-console.log(goodList, 'gg')
 </script>
 
 <template>
