@@ -1,9 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+const { user } = userStore
+console.log(user)
+</script>
 <template>
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <template v-if="true">
+        <template v-if="user?.id">
           <li>
             <a href="javascript:;"><i class="iconfont icon-user"></i></a>
           </li>

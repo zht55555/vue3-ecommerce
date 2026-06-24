@@ -5,12 +5,14 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios'
+import { ElMessage } from 'element-plus'
 
 const TOKEN_KEY = 'token'
 
 export interface ApiResponse<T = unknown> {
   code: number
   message: string
+  msg?: string
   result: T
 }
 
@@ -41,7 +43,9 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   <T>(response: AxiosResponse<T>) => response.data,
   (error: AxiosError<ApiResponse>) => {
-    const message = error.response?.data?.message ?? error.message ?? '请求失败'
+    const serverMessage = error.response?.data?.message ?? error.response?.data?.msg
+    const message = serverMessage ?? error.message ?? '请求失败'
+    ElMessage.error(message)
     return Promise.reject(new Error(message))
   },
 )
