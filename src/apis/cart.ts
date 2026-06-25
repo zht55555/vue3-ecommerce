@@ -21,3 +21,9 @@ export const addCartList = ({ skuId, count }: { skuId: string; count: number }) 
 export const getCartList = () => {
   return http.get<ApiResponse<CartItem[]>>('/member/cart')
 }
+
+export const deleteCartList = (ids: string[]) => {
+  return http.delete<ApiResponse>('/member/cart', {
+    data: { ids },
+  })
+}

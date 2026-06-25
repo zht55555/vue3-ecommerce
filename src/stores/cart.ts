@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { addCartList, getCartList } from '@/apis/cart.ts'
+import { addCartList, deleteCartList, getCartList } from '@/apis/cart.ts'
 
 export interface GoodItem {
   id: string
@@ -20,13 +20,31 @@ export const useCartStore = defineStore('cart', () => {
   const cartList = ref<GoodItem[]>([])
 
   const updateCartList = async () => {
+    if (!isLogin.value) {
+      cartList.value = []
+      return
+    }
+
     const res = await getCartList()
     cartList.value = res.result
   }
+
+  watch(
+    isLogin,
+    async (loggedIn) => {
+      if (loggedIn) {
+        await updateCartList()
+      } else {
+        cartList.value = []
+      }
+    },
+    { immediate: true },
+  )
+
   const addCart = async (goods: GoodItem) => {
     if (isLogin.value) {
-      const res = await addCartList({ skuId: goods.skuId, count: goods.count })
-      updateCartList()
+      await addCartList({ skuId: goods.skuId, count: goods.count })
+      await updateCartList()
     } else {
       const index = cartList.value.findIndex((item) => item.skuId === goods.skuId)
       if (index !== -1) {
@@ -39,9 +57,16 @@ export const useCartStore = defineStore('cart', () => {
       }
     }
   }
-  const deleteCart = (skuId: string) => {
-    cartList.value = cartList.value.filter((item) => item.skuId !== skuId)
+
+  const deleteCart = async (skuId: string) => {
+    if (isLogin.value) {
+      await deleteCartList([skuId])
+      await updateCartList()
+    } else {
+      cartList.value = cartList.value.filter((item) => item.skuId !== skuId)
+    }
   }
+
   const totalCount = computed(() => cartList.value.reduce((total, item) => total + item.count, 0))
   const totalPrice = computed(() =>
     cartList.value.reduce((total, item) => total + item.count * item.price, 0),
@@ -70,6 +95,8 @@ export const useCartStore = defineStore('cart', () => {
   )
   return {
     cartList,
+    isLogin,
+    updateCartList,
     addCart,
     deleteCart,
     totalPrice,
