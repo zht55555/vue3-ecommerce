@@ -33,10 +33,6 @@ const router = createRouter({
       ],
     },
     {
-      path: '/practice',
-      component: Practice,
-    },
-    {
       path: '/login',
       component: Login,
     },

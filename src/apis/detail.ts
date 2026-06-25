@@ -10,6 +10,7 @@ export interface GoodsDetail {
   commentCount: number
   collectCount: number
   categories: { id: string; name: string }[]
+  picture: string
   brand: {
     id: string
     name: string

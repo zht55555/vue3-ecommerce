@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getDetail, type GoodsDetail } from '@/apis/detail'
+import { useCartStore } from '@/stores/cart.ts'
 import GoodHot from './_components/DetailHot.vue'
+import { ElMessage } from 'element-plus'
 // import ImageView from '@/components/ImageView/index.vue'
 // import Sku from '@/components/Sku/index.vue'
 
 const route = useRoute()
-
+const cartStore = useCartStore()
+const count = ref(1)
 const goods = reactive<GoodsDetail>({
   id: '',
   name: '',
@@ -18,7 +21,7 @@ const goods = reactive<GoodsDetail>({
   commentCount: 0,
   collectCount: 0,
   categories: [],
-
+  picture: '',
   brand: {
     id: '',
     name: '',
@@ -51,9 +54,30 @@ type SkuChangePayload =
       specsText: string
     }
   | Record<string, never>
-
+let skuObj = {} as SkuChangePayload
 const change = (payload: SkuChangePayload) => {
   console.log('选中的sku信息', payload)
+  skuObj = payload
+}
+
+const countChange = (newCount: number) => {
+  console.log(newCount)
+}
+const addCart = () => {
+  if (skuObj?.skuId) {
+    cartStore.addCart({
+      id: goods.id,
+      name: goods.name,
+      picture: goods.mainPictures[0],
+      price: goods.price,
+      count: count.value,
+      skuId: skuObj.skuId,
+      attrsText: skuObj.specsText,
+      selected: true,
+    })
+  } else {
+    ElMessage.warning('请选择规格')
+  }
 }
 </script>
 <template>
@@ -98,7 +122,7 @@ const change = (payload: SkuChangePayload) => {
                 </li>
                 <li>
                   <p>品牌信息</p>
-                  <p>{{ goods.brand.name }}</p>
+                  <p>{{ goods?.brand?.name }}</p>
                   <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                 </li>
               </ul>
@@ -130,13 +154,11 @@ const change = (payload: SkuChangePayload) => {
               <SkuComponent :goods="goods" @change="change" />
 
               <!-- 数据组件 -->
-              <!-- <el-input-number :min="1" v-model="count" @change="countChange" /> -->
+              <el-input-number :min="1" v-model="count" @change="countChange" />
 
               <!-- 按钮组件 -->
               <div>
-                <!-- <el-button size="large" class="btn" @click="addCart">
-                                    加入购物车
-                                </el-button> -->
+                <el-button size="large" class="btn" @click="addCart"> 加入购物车 </el-button>
               </div>
             </div>
           </div>

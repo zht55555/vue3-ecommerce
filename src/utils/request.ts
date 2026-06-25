@@ -5,6 +5,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios'
+import router from '@/router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 
@@ -48,6 +49,11 @@ request.interceptors.response.use(
     const serverMessage = error.response?.data?.message ?? error.response?.data?.msg
     const message = serverMessage ?? error.message ?? '请求失败'
     ElMessage.error(message)
+    if (error.response?.status === 401) {
+      const userStore = useUserStore()
+      userStore.clearUserInfo()
+      router.push('/login')
+    }
     return Promise.reject(new Error(message))
   },
 )

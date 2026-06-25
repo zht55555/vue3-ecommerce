@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/stores/category'
-
+import HeaderCart from './HeaderCart.vue'
 const categoryStore = useCategoryStore()
 const { categoryList } = storeToRefs(categoryStore)
 </script>
