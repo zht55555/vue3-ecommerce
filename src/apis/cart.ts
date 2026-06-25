@@ -27,3 +27,7 @@ export const deleteCartList = (ids: string[]) => {
     data: { ids },
   })
 }
+
+export const mergeCartList = (data: { skuId: string; count: number; selected: boolean }[]) => {
+  return http.post<ApiResponse>('/member/cart/merge', data)
+}

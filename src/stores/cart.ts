@@ -66,7 +66,9 @@ export const useCartStore = defineStore('cart', () => {
       cartList.value = cartList.value.filter((item) => item.skuId !== skuId)
     }
   }
-
+  const clearCart = async () => {
+    cartList.value = []
+  }
   const totalCount = computed(() => cartList.value.reduce((total, item) => total + item.count, 0))
   const totalPrice = computed(() =>
     cartList.value.reduce((total, item) => total + item.count * item.price, 0),
@@ -99,6 +101,7 @@ export const useCartStore = defineStore('cart', () => {
     updateCartList,
     addCart,
     deleteCart,
+    clearCart,
     totalPrice,
     totalCount,
     singleCheck,
