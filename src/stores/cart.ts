@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-interface GoodItem {
+export interface GoodItem {
   id: string
   name: string
   picture?: string
@@ -32,11 +32,40 @@ export const useCartStore = defineStore('cart', () => {
   const totalPrice = computed(() =>
     cartList.value.reduce((total, item) => total + item.count * item.price, 0),
   )
+  const singleCheck = (item: GoodItem, selected: boolean) => {
+    cartList.value = cartList.value.map((i) => (i.skuId === item.skuId ? { ...i, selected } : i))
+  }
+
+  const allCheck = (selected: boolean) => {
+    cartList.value = cartList.value.map((item) => ({ ...item, selected }))
+  }
+  const isAll = computed(() => cartList.value.every((item) => item.selected))
+  const allCount = computed(() => cartList.value.filter((item) => item.selected).length)
+  const allPrice = computed(() =>
+    cartList.value.reduce(
+      (total, item) => (item.selected ? total + item.count * item.price : total),
+      0,
+    ),
+  )
+  const selectedCount = computed(() => cartList.value.filter((item) => item.selected).length)
+  const selectedPrice = computed(() =>
+    cartList.value.reduce(
+      (total, item) => (item.selected ? total + item.count * item.price : total),
+      0,
+    ),
+  )
   return {
     cartList,
     addCart,
     deleteCart,
     totalPrice,
     totalCount,
+    singleCheck,
+    allCheck,
+    isAll,
+    allCount,
+    allPrice,
+    selectedCount,
+    selectedPrice,
   }
 })
