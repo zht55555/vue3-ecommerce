@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { addCartList, getCartList } from '@/apis/cart.ts'
 
 export interface GoodItem {
   id: string
@@ -13,16 +15,28 @@ export interface GoodItem {
 }
 
 export const useCartStore = defineStore('cart', () => {
+  const userStore = useUserStore()
+  const isLogin = computed(() => !!userStore.user?.token)
   const cartList = ref<GoodItem[]>([])
-  const addCart = (goods: GoodItem) => {
-    const index = cartList.value.findIndex((item) => item.skuId === goods.skuId)
-    if (index !== -1) {
-      const item = cartList.value[index]
-      if (item) {
-        item.count += goods.count
-      }
+
+  const updateCartList = async () => {
+    const res = await getCartList()
+    cartList.value = res.result
+  }
+  const addCart = async (goods: GoodItem) => {
+    if (isLogin.value) {
+      const res = await addCartList({ skuId: goods.skuId, count: goods.count })
+      updateCartList()
     } else {
-      cartList.value.push(goods)
+      const index = cartList.value.findIndex((item) => item.skuId === goods.skuId)
+      if (index !== -1) {
+        const item = cartList.value[index]
+        if (item) {
+          item.count += goods.count
+        }
+      } else {
+        cartList.value.push(goods)
+      }
     }
   }
   const deleteCart = (skuId: string) => {
