@@ -75,5 +75,5 @@ export const getSubCategory = (data: {
   pageSize: number
   sortField: string
 }) => {
-  return http.post<ApiResponse<SubCategory>>('/category/goods/temporary', { method: 'POST', data })
+  return http.post<ApiResponse<SubCategory>>('/category/goods/temporary', data)
 }

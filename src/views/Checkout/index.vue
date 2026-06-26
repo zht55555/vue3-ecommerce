@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getCheckout } from '@/apis/checkout'
+import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
+import { getCheckout, createOrder } from '@/apis/checkout'
 import type { CheckoutUserAddress, CheckoutParams } from '@/apis/checkout'
 
 defineOptions({
   name: 'CheckoutPage',
 })
-
+const router = useRouter()
+const cartStore = useCartStore()
 const checkoutData = ref<CheckoutParams | null>(null) // 总数据
 const curAddress = ref<CheckoutUserAddress | null>(null) // 当前选中的地址
 const showDialog = ref(false) // 是否显示切换地址弹窗
@@ -15,17 +18,43 @@ const activeAddress = ref<CheckoutUserAddress | null>(null) // 当前激活的�
 onMounted(async () => {
   const res = await getCheckout()
   checkoutData.value = res.result
-  curAddress.value = res.result.userAddresses.find(
+  const defaultAddress = res.result.userAddresses.find(
     (item) => item.isDefault === 0,
   ) as CheckoutUserAddress
+  curAddress.value = defaultAddress
+  activeAddress.value = defaultAddress
 })
-console.log('checkoutData', checkoutData.value)
 const switchAddress = (item: CheckoutUserAddress) => {
   activeAddress.value = item
 }
 const confirm = () => {
-  //   curAddress.value = activeAddress.value
+  curAddress.value = activeAddress.value
   showDialog.value = false
+}
+
+const onCreateOrder = async () => {
+  console.log('checkoutData', checkoutData.value)
+  const res = await createOrder({
+    deliveryTimeType: 1,
+    payType: 1,
+    payChannel: 1,
+    buyerMessage: '',
+    goods: checkoutData.value?.goods.map((item) => {
+      return {
+        skuId: item.skuId,
+        count: item.count,
+      }
+    }) as [],
+    addressId: curAddress.value?.id as string,
+  })
+  const orderId = res.result.id
+  router.push({
+    path: '/pay',
+    query: {
+      id: orderId,
+    },
+  })
+  cartStore.clearCart()
 }
 </script>
 
@@ -67,7 +96,23 @@ const confirm = () => {
                 <th width="170">实付</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <tr v-for="i in checkoutData?.goods" :key="i.id">
+                <td>
+                  <a href="javascript:;" class="info">
+                    <img :src="i.picture" alt="" />
+                    <div class="right">
+                      <p>{{ i.name }}</p>
+                      <p>{{ i.attrsText }}</p>
+                    </div>
+                  </a>
+                </td>
+                <td>&yen;{{ i.price }}</td>
+                <td>{{ i.count }}</td>
+                <td>&yen;{{ i.totalPrice }}</td>
+                <td>&yen;{{ i.totalPayPrice }}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
 
@@ -90,25 +135,25 @@ const confirm = () => {
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <dd>0件</dd>
+              <dd>{{ checkoutData?.summary?.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
-              <dd>¥0.00</dd>
+              <dd>¥{{ checkoutData?.summary?.totalPrice.toFixed(2) }}</dd>
             </dl>
             <dl>
               <dt>运<i></i>费：</dt>
-              <dd>¥0.00</dd>
+              <dd>¥{{ checkoutData?.summary?.postFee.toFixed(2) }}</dd>
             </dl>
             <dl>
               <dt>应付总额：</dt>
-              <dd class="price">¥0.00</dd>
+              <dd class="price">{{ checkoutData?.summary?.totalPayPrice.toFixed(2) }}</dd>
             </dl>
           </div>
         </div>
 
         <div class="submit">
-          <el-button type="primary" size="large">提交订单</el-button>
+          <el-button type="primary" size="large" @click="onCreateOrder">提交订单</el-button>
         </div>
       </div>
     </div>

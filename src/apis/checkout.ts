@@ -15,11 +15,15 @@ export interface CheckoutUserAddress {
 }
 
 interface CheckoutGoods {
+  skuId: string
   id: string
   name: string
   picture: string
   price: number
   count: number
+  attrsText: string
+  totalPrice: number
+  totalPayPrice: number
 }
 
 interface CheckoutSummary {
@@ -35,6 +39,24 @@ export interface CheckoutParams {
   goods: CheckoutGoods[]
   summary: CheckoutSummary
 }
+
+export interface CreateOrderParams {
+  deliveryTimeType: number
+  payType: number
+  payChannel: 1
+  buyerMessage: string
+  goods: {
+    skuId: string
+    count: number
+  }[]
+  addressId: string
+}
+// 获取结算页数据
 export const getCheckout = () => {
   return http.get<ApiResponse<CheckoutParams>>('/member/order/pre')
+}
+
+// 提交订单
+export const createOrder = (data: CreateOrderParams) => {
+  return http.post<ApiResponse<{ id: string }>>('/member/order', data)
 }
